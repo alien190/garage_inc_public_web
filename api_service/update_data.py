@@ -8,10 +8,9 @@ bp = Blueprint('update_data', __name__, url_prefix='/update_data')
 def register():
     try:
         db = get_db()
-
         json = request.json
         measurments = measurments_from_json(json)
-
+        
         for measurment in measurments.measurments:
 
                 sql = """INSERT INTO measurings 
