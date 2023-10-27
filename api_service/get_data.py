@@ -1,6 +1,7 @@
 from api_service.measurments import measurments_from_json, measurments_from_rows
 from flask import (Blueprint, json, request)
 from api_service.db import get_db
+from pythonping import ping
 
 bp = Blueprint('get_data', __name__, url_prefix='/get_data')
 
@@ -30,3 +31,34 @@ def last_timestamp():
     except Exception as error:
         print(error)
         return str(error), 500
+    
+
+@bp.route('/last/', methods=['GET'])
+def last():
+    try:
+        db = get_db()
+        cursor = db.execute("SELECT timestamp, temperature, humidity FROM measurings ORDER BY timestamp DESC LIMIT 1")
+        rows = cursor.fetchall()
+        if len(rows) == 0:
+            return 'There is no data', 500    
+        
+        return json.dumps(rows[0]), 200
+
+    except Exception as error:
+        print(error)
+        return str(error), 500    
+    
+
+@bp.route('/connectivity/', methods=['GET'])
+def connectivity():
+   success = {'is_connected': 1}
+   failure = {'is_connected': 0}
+   try:
+      if(ping('172.16.1.1')._responses[0].success):
+        return json.dumps(success), 200  
+      else:
+        failure['error'] = 'ping failure'
+        return json.dumps(failure), 200  
+   except Exception as e: 
+      failure['error'] = str(e)
+      return json.dumps(failure), 200
