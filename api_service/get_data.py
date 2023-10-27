@@ -37,7 +37,7 @@ def last_timestamp():
 def last():
     try:
         db = get_db()
-        cursor = db.execute("SELECT timestamp, temperature, humidity FROM measurings ORDER BY timestamp DESC LIMIT 1")
+        cursor = db.execute("SELECT timestamp, temperature, humidity, DATETIME(timestamp, 'unixepoch', 'localtime') as datetime FROM measurings ORDER BY timestamp DESC LIMIT 1")
         rows = cursor.fetchall()
         if len(rows) == 0:
             return 'There is no data', 500    
