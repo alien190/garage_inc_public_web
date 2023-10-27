@@ -1,6 +1,6 @@
-from api_service.measurments import measurments_from_json
+from .measurments import measurments_from_json
 from flask import (Blueprint, request)
-from api_service.db import get_db
+from .db import get_db
 
 bp = Blueprint('update_data', __name__, url_prefix='/update_data')
 

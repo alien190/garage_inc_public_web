@@ -1,6 +1,6 @@
-from api_service.measurments import measurments_from_json, measurments_from_rows
+from .measurments import measurments_from_json, measurments_from_rows
 from flask import (Blueprint, json, request)
-from api_service.db import get_db
+from .db import get_db
 from pythonping import ping
 
 bp = Blueprint('get_data', __name__, url_prefix='/get_data')
