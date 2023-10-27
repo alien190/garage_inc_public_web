@@ -54,7 +54,7 @@ def connectivity():
    success = {'is_connected': 1}
    failure = {'is_connected': 0}
    try:
-      if(ping('172.16.1.1')._responses[0].success):
+      if(ping('172.16.1.2')._responses[0].success):
         return json.dumps(success), 200  
       else:
         failure['error'] = 'ping failure'
