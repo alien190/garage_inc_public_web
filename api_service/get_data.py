@@ -33,7 +33,7 @@ def get_measurings_sql(period:str):
         return '''SELECT timestamp,temperature,humidity,sensor_id 
                   FROM measurings 
                   ORDER BY timestamp DESC 
-                  LIMIT 1440'''
+                  LIMIT 100'''
 
     
     return f'''SELECT {period} as timestamp, 
@@ -43,7 +43,7 @@ def get_measurings_sql(period:str):
                FROM measurings 
                GROUP BY {period}
                ORDER BY timestamp DESC
-               LIMIT 1440'''
+               LIMIT 100'''
 
 @bp.route('/last_timestamp/', methods=['GET'])
 def last_timestamp():
