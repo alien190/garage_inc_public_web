@@ -1,24 +1,50 @@
-from .measurments import measurments_from_json, measurments_from_rows
+from .measurments import measurments_from_rows
+from .retro_measurment import retro_measurments_from_rows
 from flask import (Blueprint, json, request)
 from .db import get_db
 from pythonping import ping
 
+allowed_periods = ['m1', 'm5', 'm15', 'm30', 'h1', 'h4', 'd1']
+
 bp = Blueprint('get_data', __name__, url_prefix='/get_data')
 
-@bp.route('/measurings/', methods=['GET'])
+@bp.route('/retro/', methods=['GET'])
 def measurings():
     try:
-        print(request.args)
         db = get_db()
-        cursor = db.execute("SELECT * FROM measurings")
+        period = request.args.get('period', 'm1')
+        sql = get_measurings_sql(period)
+        cursor = db.execute(sql)
         rows = cursor.fetchall()
-        measurments = measurments_from_rows(rows)
+        measurments = retro_measurments_from_rows(rows)
         return json.dumps(measurments.__dict__), 200
 
     except Exception as error:
         print(error)
         return str(error), 500
+
+def get_measurings_sql(period:str):
+    period = period.lower()
     
+    if not period in allowed_periods:
+        period = 'm1'
+    
+    if(period == 'm1'):
+        return '''SELECT timestamp,temperature,humidity,sensor_id 
+                  FROM measurings 
+                  ORDER BY timestamp DESC 
+                  LIMIT 1440'''
+
+    
+    return f'''SELECT {period} as timestamp, 
+                     avg(temperature) as temperature, 
+                     avg(humidity) as humidity,
+                     sensor_id
+               FROM measurings 
+               GROUP BY {period}
+               ORDER BY timestamp DESC
+               LIMIT 1440'''
+
 @bp.route('/last_timestamp/', methods=['GET'])
 def last_timestamp():
     try:
