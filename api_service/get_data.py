@@ -25,7 +25,7 @@ def measurings():
         
         db = get_db()
         period = request.args.get('period', 'm1')
-        sql = get_measurings_sql(period)
+        sql = get_measurings_sql(period, sensor_id)
         cursor = db.execute(sql)
         rows = cursor.fetchall()
         measurments = retro_measurments_from_rows(rows)
