@@ -94,10 +94,11 @@ def last():
            return error, 500
         
         db = get_db()
-        cursor = db.execute(f'''SELECT timestamp, 
-                                      temperature, 
-                                      humidity, 
-                                      DATETIME(timestamp, 'unixepoch', 'localtime') as datetime 
+        cursor = db.execute(f'''SELECT sensor_id,
+                                       timestamp, 
+                                       temperature, 
+                                       humidity, 
+                                       DATETIME(timestamp, 'unixepoch', 'localtime') as datetime 
                                 FROM measurings 
                                 WHERE sensor_id = {sensor_id}
                                 ORDER BY timestamp DESC 
