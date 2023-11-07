@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS measurings;
 
 CREATE TABLE measurings ( 
     timestamp INT PRIMARY KEY, 
-    sensor_id INT NOT NULL, 
+    sensor_id INT NOT NULL PRIMARY KEY, 
     m5 INT NOT NULL, 
     m15 INT NOT NULL, 
     m30 INT NOT NULL, 
