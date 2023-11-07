@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS measurings;
 
 CREATE TABLE measurings ( 
-    timestamp INT PRIMARY KEY, 
-    sensor_id INT NOT NULL PRIMARY KEY, 
+    timestamp INT NOT NULL, 
+    sensor_id INT NOT NULL, 
     m5 INT NOT NULL, 
     m15 INT NOT NULL, 
     m30 INT NOT NULL, 
@@ -10,5 +10,6 @@ CREATE TABLE measurings (
     h4 INT NOT NULL, 
     d1 INT NOT NULL, 
     temperature FLOAT NOT NULL,  
-    humidity FLOAT NOT NULL
+    humidity FLOAT NOT NULL,
+    PRIMARY KEY (timestamp, sensor_id)
 );
