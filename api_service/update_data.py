@@ -25,7 +25,7 @@ def register():
                             temperature,
                             humidity) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
-                        ON CONFLICT(timestamp) DO UPDATE SET temperature = ?, humidity = ?"""
+                        ON CONFLICT(timestamp, sensor_id) DO UPDATE SET temperature = ?, humidity = ?"""
                 
                 val = (measurment.timestamp, 
                     measurment.sensor_id,
