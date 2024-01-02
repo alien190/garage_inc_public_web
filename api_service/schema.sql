@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS measurings;
+DROP TABLE IF EXISTS temperatures;
 
-CREATE TABLE measurings ( 
+CREATE TABLE temperatures ( 
     timestamp INT NOT NULL, 
     sensor_id INT NOT NULL, 
     m5 INT NOT NULL, 

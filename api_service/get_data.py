@@ -1,5 +1,5 @@
-from .measurments import measurments_from_rows
-from .retro_measurment import retro_measurments_from_rows
+from .temperatures import temperatures_from_rows
+from .retro_temperatures import retro_temperatures_from_rows
 from flask import (Blueprint, json, Request, request)
 from .db import get_db
 from pythonping import ping
@@ -14,7 +14,7 @@ def get_sensor_id(rq:Request):
         return 0
     return int(sensor_id)
 
-@bp.route('/retro/', methods=['GET'])
+@bp.route('/temperatures_retro/', methods=['GET'])
 def measurings():
     try:
         sensor_id = get_sensor_id(request)
@@ -25,17 +25,17 @@ def measurings():
         
         db = get_db()
         period = request.args.get('period', 'm1')
-        sql = get_measurings_sql(period, sensor_id)
+        sql = get_temperatures_sql(period, sensor_id)
         cursor = db.execute(sql)
         rows = cursor.fetchall()
-        measurments = retro_measurments_from_rows(rows)
+        measurments = retro_temperatures_from_rows(rows)
         return json.dumps(measurments.__dict__), 200
 
     except Exception as error:
         print(error)
         return str(error), 500
 
-def get_measurings_sql(period:str, sensor_id:int):
+def get_temperatures_sql(period:str, sensor_id:int):
     period = period.lower()
     
     if not period in allowed_periods:
@@ -43,7 +43,7 @@ def get_measurings_sql(period:str, sensor_id:int):
     
     if(period == 'm1'):
         return f'''SELECT timestamp,temperature,humidity,sensor_id 
-                  FROM measurings 
+                  FROM temperatures 
                   WHERE sensor_id = {sensor_id}
                   ORDER BY timestamp DESC
                   LIMIT 100'''
@@ -53,13 +53,13 @@ def get_measurings_sql(period:str, sensor_id:int):
                      avg(temperature) as temperature, 
                      avg(humidity) as humidity,
                      sensor_id
-               FROM measurings 
+               FROM temperatures 
                WHERE sensor_id = {sensor_id}
                GROUP BY {period}
                ORDER BY timestamp DESC
                LIMIT 100'''
 
-@bp.route('/last_timestamp/', methods=['GET'])
+@bp.route('/temperatures_last_timestamp/', methods=['GET'])
 def last_timestamp():
     try:
         sensor_id = get_sensor_id(request)
@@ -70,7 +70,7 @@ def last_timestamp():
         
         db = get_db()
         cursor = db.execute(f'''SELECT timestamp 
-                               FROM measurings 
+                               FROM temperatures 
                                WHERE sensor_id = {sensor_id}
                                ORDER BY timestamp 
                                DESC LIMIT 1''')
@@ -84,7 +84,7 @@ def last_timestamp():
         return str(error), 500
     
 
-@bp.route('/last/', methods=['GET'])
+@bp.route('/temperatures_last/', methods=['GET'])
 def last():
     try:
         sensor_id = get_sensor_id(request)
@@ -99,7 +99,7 @@ def last():
                                        temperature, 
                                        humidity, 
                                        DATETIME(timestamp, 'unixepoch', 'localtime') as datetime 
-                                FROM measurings 
+                                FROM temperatures 
                                 WHERE sensor_id = {sensor_id}
                                 ORDER BY timestamp DESC 
                                 LIMIT 1''')

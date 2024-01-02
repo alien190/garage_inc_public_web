@@ -1,19 +1,19 @@
-from .measurments import measurments_from_json
+from .temperatures import temperatures_from_json
 from flask import (Blueprint, request)
 from .db import get_db
 
 bp = Blueprint('update_data', __name__, url_prefix='/update_data')
 
-@bp.route('/', methods=['POST'])
+@bp.route('/temperatures/', methods=['POST'])
 def register():
     try:
         db = get_db()
         json = request.json
-        measurments = measurments_from_json(json)
+        temperatures = temperatures_from_json(json)
         
-        for measurment in measurments.measurments:
+        for temperature in temperatures.values:
 
-                sql = """INSERT INTO measurings 
+                sql = """INSERT INTO temperatures 
                             (timestamp,
                             sensor_id,
                             m5,
@@ -27,18 +27,18 @@ def register():
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                         ON CONFLICT(timestamp, sensor_id) DO UPDATE SET temperature = ?, humidity = ?"""
                 
-                val = (measurment.timestamp, 
-                    measurment.sensor_id,
-                    measurment.m5,
-                    measurment.m15,
-                    measurment.m30,
-                    measurment.h1,
-                    measurment.h4,
-                    measurment.d1,
-                    measurment.temperature,
-                    measurment.humidity,
-                    measurment.temperature,
-                    measurment.humidity)
+                val = (temperature.timestamp, 
+                    temperature.sensor_id,
+                    temperature.m5,
+                    temperature.m15,
+                    temperature.m30,
+                    temperature.h1,
+                    temperature.h4,
+                    temperature.d1,
+                    temperature.temperature,
+                    temperature.humidity,
+                    temperature.temperature,
+                    temperature.humidity)
                 
                 db.execute(sql, val)
 
