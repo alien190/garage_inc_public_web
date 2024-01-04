@@ -6,7 +6,7 @@ from .db import get_db
 bp = Blueprint('update_data', __name__, url_prefix='/update_data')
 
 @bp.route('/temperatures/', methods=['POST'])
-def register():
+def update_temperautres():
     try:
         db = get_db()
         json = request.json
@@ -52,7 +52,7 @@ def register():
     
 
 @bp.route('/airflows/', methods=['POST'])
-def register():
+def update_airflows():
     try:
         db = get_db()
         json = request.json
