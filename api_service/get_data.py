@@ -149,9 +149,9 @@ def get_last(request:Request, type:int):
         db = get_db()
         sql = ""
         if(type == 0): 
-            sql = get_airflows_last_sql(sensor_id)
-        if(type == 1): 
             sql = get_temperatures_last_sql(sensor_id)   
+        if(type == 1): 
+            sql = get_airflows_last_sql(sensor_id)
         cursor = db.execute(sql)
         rows = cursor.fetchall()
         if len(rows) == 0:
