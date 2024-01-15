@@ -73,7 +73,7 @@ def update_airflows():
                             temperature,
                             air_consumption) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
-                        ON CONFLICT(air_flow_rate, temperature, air_consumption) DO UPDATE SET air_flow_rate = ?, temperature = ?, air_consumption = ?"""
+                        ON CONFLICT(timestamp, sensor_id) DO UPDATE SET air_flow_rate = ?, temperature = ?, air_consumption = ?"""
                 
                 val = (value.timestamp, 
                     value.sensor_id,
